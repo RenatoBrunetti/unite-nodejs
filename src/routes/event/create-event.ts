@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 
+import { error } from "@/config";
 import { eventService } from "@/services";
 import { generateSlug } from "@/utils/slug";
 
@@ -26,7 +27,7 @@ export async function createEvent(app: FastifyInstance) {
       console.log("slug:", slug);
       const eventWithSameSlug = await eventService.findUniqueEventSlug(slug);
       if (eventWithSameSlug !== null) {
-        throw new Error("Event title already exists.");
+        throw new Error(error.event.create.duplicatedEventTitle);
       }
       const event = await eventService.createEvent({ ...data, slug });
       return reply.status(201).send({ eventId: event.id });
