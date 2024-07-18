@@ -1,6 +1,6 @@
 import { Event } from "@prisma/client";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib";
 
 interface CreateEventParams {
   title: string;

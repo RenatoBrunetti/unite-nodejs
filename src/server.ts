@@ -5,7 +5,7 @@ import {
   validatorCompiler,
 } from "fastify-type-provider-zod";
 
-import { createEvent, registerForEvent } from "@/routes/event";
+import { createEvent, getEvent, registerForEvent } from "@/routes/event";
 
 const PORT = parseInt(process.env.PORT as string);
 
@@ -15,6 +15,7 @@ app.setSerializerCompiler(serializerCompiler);
 
 // Event Routes
 app.register(createEvent);
+app.register(getEvent);
 app.register(registerForEvent);
 
 app.listen({ port: PORT }).then(() => {

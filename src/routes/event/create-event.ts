@@ -26,7 +26,7 @@ export async function createEvent(app: FastifyInstance) {
       const slug = generateSlug(data.title);
       console.log("slug:", slug);
       const eventWithSameSlug = await eventService.findUniqueEventSlug(slug);
-      if (eventWithSameSlug !== null) {
+      if (!eventWithSameSlug) {
         throw new Error(error.event.create.duplicatedEventTitle);
       }
       const event = await eventService.createEvent({ ...data, slug });
