@@ -5,7 +5,12 @@ import {
   validatorCompiler,
 } from "fastify-type-provider-zod";
 
-import { createEvent, getEvent, registerForEvent } from "@/routes/event";
+import {
+  createEvent,
+  getEvent,
+  getEventAttendees,
+  registerForEvent,
+} from "@/routes/event";
 import { checkIn, getAttendeeBadge } from "@/routes/attendee";
 
 const PORT = parseInt(process.env.PORT as string);
@@ -21,6 +26,7 @@ app.register(getAttendeeBadge);
 // Event Routes
 app.register(createEvent);
 app.register(getEvent);
+app.register(getEventAttendees);
 app.register(registerForEvent);
 
 app.listen({ port: PORT }).then(() => {
