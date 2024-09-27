@@ -17,9 +17,15 @@ import {
 } from "@/routes/event";
 import { checkIn, getAttendeeBadge } from "@/routes/attendee";
 
+import { errorHandler } from "./error-handler";
+
 const PORT = parseInt(process.env.PORT as string);
 
 const app = fastfy();
+app.setValidatorCompiler(validatorCompiler);
+app.setSerializerCompiler(serializerCompiler);
+
+// Fastify Swagger
 app.register(fastifySwagger, {
   swagger: {
     consumes: ["application/json"],
@@ -34,9 +40,6 @@ app.register(fastifySwagger, {
 });
 app.register(fastifySwaggerUi, { routePrefix: "/docs" });
 
-app.setValidatorCompiler(validatorCompiler);
-app.setSerializerCompiler(serializerCompiler);
-
 // Attendee Routes
 app.register(checkIn);
 app.register(getAttendeeBadge);
@@ -47,6 +50,10 @@ app.register(getEvent);
 app.register(getEventAttendees);
 app.register(registerForEvent);
 
+// Error handler
+app.setErrorHandler(errorHandler);
+
+// Server Execution
 app.listen({ port: PORT }).then(() => {
   console.log(`HTTP Server Running on port: ${PORT}`);
 });

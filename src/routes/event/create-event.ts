@@ -6,6 +6,8 @@ import { error } from "@/config";
 import { eventService } from "@/services";
 import { generateSlug } from "@/utils/slug";
 
+import { BadRequest } from "../_errors";
+
 export async function createEvent(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
     "/events",
@@ -26,10 +28,9 @@ export async function createEvent(app: FastifyInstance) {
     async (request, reply) => {
       const data = request.body;
       const slug = generateSlug(data.title);
-      console.log("slug:", slug);
       const eventWithSameSlug = await eventService.findUniqueEventSlug(slug);
       if (!eventWithSameSlug) {
-        throw new Error(error.event.create.duplicatedEventTitle);
+        throw new BadRequest(error.event.create.duplicatedEventTitle);
       }
       const event = await eventService.createEvent({ ...data, slug });
       return reply.status(201).send({ eventId: event.id });

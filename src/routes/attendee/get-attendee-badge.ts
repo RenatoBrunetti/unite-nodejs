@@ -5,6 +5,8 @@ import { z } from "zod";
 import { error } from "@/config";
 import { prisma } from "@/lib";
 
+import { BadRequest } from "../_errors";
+
 export async function getAttendeeBadge(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().get(
     "/attendees/:attendeeId/badge",
@@ -32,7 +34,7 @@ export async function getAttendeeBadge(app: FastifyInstance) {
         select: { name: true, email: true, event: { select: { title: true } } },
         where: { id: attendeeId },
       });
-      if (!attendee) throw new Error(error.attendee.get.attendeeNotFound);
+      if (!attendee) throw new BadRequest(error.attendee.get.attendeeNotFound);
 
       const baseURL = `${request.protocol}://${request.hostname}`;
       const checkInURL = new URL(`/attendees/${attendeeId}/check-in`, baseURL);
