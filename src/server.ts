@@ -5,7 +5,9 @@ import {
   serializerCompiler,
   validatorCompiler,
   jsonSchemaTransform,
+  ZodTypeProvider,
 } from "fastify-type-provider-zod";
+import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 
@@ -20,8 +22,11 @@ import { checkIn, getAttendeeBadge } from "@/routes/attendee";
 import { errorHandler } from "./error-handler";
 
 const PORT = parseInt(process.env.PORT as string);
+const HOST = process.env.HOST as string;
+const CORS_ORIGIN = process.env.API_CORS_ORIGIN as string;
 
-const app = fastfy();
+export const app = fastfy().withTypeProvider<ZodTypeProvider>();
+app.register(fastifyCors, { origin: CORS_ORIGIN });
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
@@ -54,6 +59,6 @@ app.register(registerForEvent);
 app.setErrorHandler(errorHandler);
 
 // Server Execution
-app.listen({ port: PORT }).then(() => {
+app.listen({ port: PORT, host: HOST }).then(() => {
   console.log(`HTTP Server Running on port: ${PORT}`);
 });
